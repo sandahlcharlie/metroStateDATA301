@@ -1,0 +1,18 @@
+---
+title: "STAT301 Worksheet4"
+author: "Charles Sandahl"
+date: "2026-02-06"
+output: html_document
+---
+
+# Question 1
+```{r}
+
+```
+
+
+# Question 2
+```{r}
+
+```
+

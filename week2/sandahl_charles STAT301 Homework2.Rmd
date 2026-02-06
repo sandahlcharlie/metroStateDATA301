@@ -1,0 +1,67 @@
+---
+title: "STAT 301 Homework2"
+author: "Charles Sandahl"
+date: "2026-01-30"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(readxl)
+```
+
+# Question 1
+```{r}
+cotinineLvl12 = c(73, 58, 67, 93, 33, 18, 47)
+cotinineLvl24 = c(24, 27, 49, 59, 0, 11, 43)
+
+cotinineLvls = data.frame(cotinineLvl12, cotinineLvl24)
+
+cotinineTTest = t.test(cotinineLvl12, cotinineLvl24,
+                     paired=TRUE, 
+                     alternative = "greater", 
+                     conf.level = 0.95)
+print(cotinineTTest)
+```
+
+
+# Question 2
+```{r}
+PDIdata = read_excel("C:/Users/sanda/Downloads/PDI data.xlsx")
+PDIttest = t.test(PDIdata$PDI ~ PDIdata$Treatment,
+                  var.equal = FALSE,)
+print(PDIttest)
+```
+
+# Question 3
+```{r}
+grayLvls = c(161,140,136,161,106,149,158,182,185,145,167,177)
+condition = c("Cataractous", "Cataractous", "Cataractous",
+              "Cataractous", "Cataractous", "Cataractous", 
+              "Normal", "Normal", "Normal", "Normal", "Normal", "Normal")
+dataframe = data.frame(grayLvls, condition)
+
+dataframe%>%
+  group_by(condition)%>%
+  summarize(grayMean=mean(grayLvls), 
+            graySE=sd(grayLvls)/sqrt(length(grayLvls)), 
+            tstar=qt(1-0.05/2, length(grayLvls)-1))%>%
+  ggplot(aes(x=condition, y=grayMean))+geom_point()+geom_errorbar(aes(ymin=grayMean-tstar*graySE, ymax=grayMean+tstar*graySE))
+
+grayLvlsTTest = t.test(grayLvls ~ condition, alternative = "less")
+print(grayLvlsTTest)
+```
+
+# Question 4
+```{r}
+taxiIn = c(12, 13, 8, 21, 17, 15, 26, 12)
+taxiOut = c(30, 19, 12, 19, 18, 22, 19, 13)
+
+taxiTTest = t.test(taxiOut, taxiIn, paired = TRUE)
+print(taxiTTest)
+```
+

@@ -1,0 +1,90 @@
+---
+title: "STAT301 Homework1"
+author: "Charles Sandahl"
+date: "2026-01-23"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+```
+
+# Question 1
+
+## f.)
+```{r}
+loudness = c(15, 21, 16, 14, 20, 22,
+              32, 41, 46, 39, 52, 43,
+              52, 50, 61, 69, 43, 58)
+diameter = c("Small","Small","Small","Small","Small","Small", 
+              "Medium","Medium","Medium","Medium","Medium","Medium", 
+              "Large","Large","Large","Large","Large","Large")
+speakerSize = data.frame(diameter, loudness)
+
+print(speakerSize)
+```
+
+## g.)
+```{r}
+speakerSize %>%
+  group_by(diameter) %>%
+  summarise(meanLoudness = mean(loudness),
+            stdDevLoudness   = sd(loudness)
+  )
+```
+
+# Question 2
+
+## e.)
+```{r}
+IQ = c(81,98,117,76,91,110,103,105,72,121,
+              79,80,89,94,99,106,111,109,73,119)
+pillType = c("Smart Pill","Smart Pill","Smart Pill","Smart Pill","Smart Pill",
+             "Smart Pill","Smart Pill","Smart Pill","Smart Pill","Smart Pill",
+             "Placebo Pill","Placebo Pill","Placebo Pill","Placebo Pill","Placebo Pill",
+             "Placebo Pill","Placebo Pill","Placebo Pill","Placebo Pill","Placebo Pill")
+pillData = data.frame(pillType,IQ)
+
+print(pillData)
+```
+
+## f.)
+```{r}
+avgIQBarChart = pillData%>%
+  group_by(pillType)%>%
+  summarise(avgIQ = mean(IQ))%>%
+  ggplot(aes(x=pillType,y=avgIQ))+geom_bar(stat="identity")
+
+avgIQBarChart
+```
+
+# Question 3
+```{r}
+leadLevels =c (3.0,6.5,6.0,5.5,20.5,7.5,12.0,20.5,11.5,17.5)
+print(mean(leadLevels))
+print(sd(leadLevels))
+print(range(leadLevels))
+print(median(leadLevels))
+```
+
+# Question 4
+```{r}
+data("Orange")
+
+orangeStats= Orange%>%
+  filter(Tree == "1" | Tree == "2" | Tree == "3")%>%
+  group_by(Tree)%>%
+  summarise(avgCircumference = mean(circumference),
+            stdDevCircumference = sd(circumference))
+orangeStats
+
+orangeBoxPlot = Orange%>%
+  filter(Tree == "1" | Tree == "2" | Tree == "3")%>%
+  ggplot(aes(x = Tree, y = circumference))+geom_boxplot()
+orangeBoxPlot
+```
+

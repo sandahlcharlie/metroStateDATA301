@@ -1,0 +1,60 @@
+---
+title: "sandahl_charles STAT301 Homework3"
+author: "Charles Sandahl"
+date: "2026-01-31"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(readxl)
+```
+
+# Question 3
+```{r}
+studentData = readxl::read_excel("Week 3 - One Way ANOVA/Student final scores.XLSX")
+studentANOVA = aov(studentData$Scores ~ studentData$Pedagogy)
+summary(studentANOVA)
+TukeyHSD(studentANOVA)
+```
+
+# Question 2
+```{r}
+co2Data = readxl::read_excel("Week 3 - One Way ANOVA/CO2.XLSX")
+co2Long = co2Data %>%
+  pivot_longer(cols = everything())
+co2ANOVA = aov(co2Long$value ~ co2Long$name)
+summary(co2ANOVA)
+TukeyHSD(co2ANOVA)
+```
+
+# Question 3
+```{r}
+drugData = data.frame(
+  drug  = rep(c("Drug A","Drug B","Drug C"), each = 8),
+  score = c(51,45,33,41,36,38,39,33,
+            23,31,23,20,19,26,28,17,
+            22,18,29,32,41,20,16,23))
+drugANOVA = aov(drugData$score ~ drugData$drug)
+summary(drugANOVA)
+TukeyHSD(drugANOVA)
+```
+
+# Question 4
+```{r}
+cropData <- data.frame(
+  seed = rep(c("A","B","C","D","E"), each = 7),
+  yield  = c(1.4, 1.2, 1.1, 1.0, 0.9, 1.8, 1.2,
+             1.5, 1.8, 1.6, 1.3, 1.2, 1.9, 1.7,
+             0.3, 0.5, 0.8, 0.2, 0.6, 0.5, 0.3,
+             1.5, 1.9, 1.2, 1.6, 1.8, 1.5, 0.6,
+             1.1, 1.5, 0.7, 1.4, 1.2, 1.3, 1.7))
+cropANOVA = aov(cropData$yield ~ cropData$seed)
+summary(cropANOVA)
+TukeyHSD(cropANOVA)
+```
+

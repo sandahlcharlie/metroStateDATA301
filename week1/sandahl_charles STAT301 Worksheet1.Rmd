@@ -1,0 +1,46 @@
+---
+title: "STAT301 Week1"
+author: "Charles Sandahl"
+date: "2026-01-17"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+```
+
+# Question 1
+## Part a.)
+```{r}
+name = c("John","Peter","Jolie","Jason","Leslie","Donna")
+gender = c("Male","Male","Female","Male","Female","Female")
+salary = c(21000,23000,25000,30000,20000,35000)
+startDate = c("2010-11-01","2008-12-15","2007-12-01","2001-10-10","2009-01-10","2001-05-01")
+chef = data.frame(name, gender, salary,startDate)
+```
+
+## Part b.)
+```{r}
+chef2 = chef%>% select(gender,salary,startDate)
+chef2
+```
+
+## Part c.)
+```{r}
+femaleChef = chef%>%filter(gender == "Female")
+femaleChef
+```
+
+## Part d-e.)
+```{r}
+avgSalaryBarChart = chef%>%
+  group_by(gender)%>%
+  summarise(avgSalary = mean(salary), stdDevSalary = sd(salary))%>%
+  ggplot(aes(x=gender,y=avgSalary))+geom_bar(stat="identity")
+avgSalaryBarChart
+```
+

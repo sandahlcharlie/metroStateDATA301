@@ -1,0 +1,17 @@
+---
+title: "Worksheet5"
+author: "Charles Sandahl"
+date: "2026-02-13"
+output: html_document
+---
+
+```{r}
+library(nlme)
+library(tidyverse)
+library(multcomp)
+```
+
+```{r}
+
+```
+

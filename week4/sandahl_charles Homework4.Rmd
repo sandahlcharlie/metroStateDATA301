@@ -1,5 +1,70 @@
 ---
-title: "sandahl_charles Homework4"
+title: "STAT 301 Homework4"
+author: "Charles Sandahl"
+date: "2026-02-06"
 output: html_document
 ---
+
+```{r}
+library(tidyverse)
+library(readxl)
+library(car)
+```
+
+# Question 1
+```{r}
+diet = rep(c("A", "B"), c(9, 9))
+age = rep(c("20 - 29", "30 - 39", "40 or older",
+            "20 - 29", "30 - 39", "40 or older"),
+          c(3, 3, 3, 3, 3, 3))
+weight = c(4473, 3878, 3936, 3886, 4147, 3693, 3878, 4002, 3382,
+          3667, 3139, 3356, 2762, 3551, 3272, 2781, 3138, 3435)
+birthData = data.frame(weight, age, diet)
+
+birthANOVA = aov(weight ~ diet+age+diet*age)
+summary(birthANOVA)
+TukeyHSD(birthANOVA)
+
+```
+
+# Question 2
+```{r}
+soilData = read_excel("~/DATA301-01 Variance and Multivariate Analysis/Week 4 - Two Way ANOVA/SoilTesting.xls")
+
+soilANOVA = aov(Carbon ~ Source+Location+Source*Location, data = soilData)
+summary(soilANOVA)
+TukeyHSD(soilANOVA)
+interaction.plot(soilData$Source, soilData$Location, as.numeric(soilData$Carbon), fun = mean)
+```
+# Question 3
+```{r}
+state <- factor(rep(c("Early", "Middle"), each = 15))
+music <- factor(rep(rep(c("Piano", "Mozart", "Easy"), each = 5), times = 2))
+agitationLevel <- c(21, 24, 22, 18, 20, 9, 12, 10, 5, 9, 29, 26, 30, 24, 26,
+               22, 20, 25, 18, 20, 14, 18, 11, 9, 13, 15, 18, 20, 13, 19)
+alzheimersData = data.frame(state, music, agitationLevel)
+
+alzheimersANOVA = aov(agitationLevel ~ state+music+state*music,
+                      data = alzheimersData)
+summary(alzheimersANOVA)
+TukeyHSD(alzheimersANOVA)
+
+earlyAlzheimersData = alzheimersData %>%
+  filter(state == "Early")
+middleAlzheimersData = alzheimersData %>%
+  filter(state == "Middle")
+earlyAlzheimersANOVA = aov(agitationLevel ~ music, data = earlyAlzheimersData)
+middleAlzheimersANOVA = aov(agitationLevel ~ music, data = middleAlzheimersData)
+
+summary(earlyAlzheimersANOVA)
+summary(middleAlzheimersANOVA)
+```
+# Question 4
+```{r}
+jobGenderData =  read_excel("~/DATA301-01 Variance and Multivariate Analysis/Week 4 - Two Way ANOVA/job and gender.xlsx")
+
+
+jobGenderANOVA = lm(Salary ~ Gender+Jobcat+Gender*Jobcat, data = jobGenderData)
+Anova(jobGenderANOVA, type = "II")
+```
 

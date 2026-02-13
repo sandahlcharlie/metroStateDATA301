@@ -1,0 +1,13 @@
+---
+title: "Homework5"
+author: "Charles Sandahl"
+date: "2026-02-13"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(nlme)
+library(multcomp)
+```
+

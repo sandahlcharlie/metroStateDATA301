@@ -1,0 +1,99 @@
+---
+title: "Example5"
+author: "Charles Sandahl"
+date: "2026-02-14"
+output: html_document
+---
+
+```{r}
+library(nlme)
+library(readxl)
+library(tidyverse)
+library(multcomp)
+```
+
+# Example 1
+```{r}
+iqData <- readxl::read_excel("IQ.xlsx")
+individual = rep(c(1:20), 3)
+
+# INDEPENDENT VARIABLE MUST BE A FACTOR!!
+iqData$timepoint = as.factor(iqData$timepoint)
+iqData$individual = individual
+
+# repeated measure one-way ANOVA
+iqANOVA = lme(Iqscore ~ timepoint, random = ~1|individual, data = iqData)
+anova(iqANOVA)
+
+# Tukey comparison for repeated measure one-way ANOVA
+iqPosthoc = glht(iqANOVA, linfct = mcp(timepoint = "Tukey"))
+summary(iqPosthoc)
+```
+
+
+# Example 2
+```{r}
+individual = rep(c(1:5), 6)
+genre = as.factor(rep(c("Science Fiction", "Novel"), each = 15))
+month = as.factor(rep(c("Month 1", "Month 2", "Month 3"), each = 5))
+booksRead = c(5,5,3,5,2,
+              3,4,3,5,4,
+              6,8,6,7,5,
+              5,8,4,3,5,
+              4,8,5,2,6,
+              1,4,3,0,3)
+booksData = data.frame(individual, genre, month, booksRead)
+
+# Two way repeated ANOVA 
+booksANOVA = lme(booksRead ~ genre + month + genre * month,
+                 random = ~1 | individual,
+                 data = booksData)
+anova(booksANOVA)
+
+#booksPostHoc = glht(booksANOVA, linfct = mcp(genre = "Tukey"))
+booksMonth1 = booksData %>%
+  filter(month == "Month 1")
+booksMonth2 = booksData %>%
+  filter(month == "Month 2")
+booksMonth3 = booksData %>%
+  filter(month == "Month 3")
+
+
+
+```
+
+## Check for interactions in Example 1
+```{r}
+# Check for interactions in T-Test
+
+month1T = t.test(booksRead ~ genre, alternative = "two.sided", data = booksMonth1)
+month2T = t.test(booksRead ~ genre, alternative = "two.sided", data = booksMonth2)
+month3T = t.test(booksRead ~ genre, alternative = "two.sided", data = booksMonth3)
+
+print(month1T)
+print(month2T)
+print(month3T)
+
+# Check for interactions ANOVA paired and unpaired
+booksSciFi = booksData %>%
+  filter(genre == "Science Fiction")
+booksNovel = booksData %>%
+  filter(genre == "Novel")
+
+booksSciFiANOVApaired = aov(booksRead ~ month, data = booksSciFi)
+booksNovelANOVApaired = aov(booksRead ~ month, data = booksNovel)
+
+summary(booksSciFiANOVApaired)
+summary(booksNovelANOVApaired)
+
+booksSciFiANOVAunPaired = lme(booksRead ~ month, 
+                            random = ~1 | individual,
+                            data = booksSciFi)
+booksNovelANOVAunPaired = lme(booksRead ~ month,
+                              random = ~1 | individual,
+                              data = booksNovel)
+anova(booksSciFiANOVAunPaired)
+anova(booksNovelANOVAunPaired)
+
+
+```

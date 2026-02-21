@@ -1,0 +1,42 @@
+---
+title: "Example5"
+author: "Charles Sandahl"
+date: "2026-02-20"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(car)
+library(nlme)
+library(multcomp)
+library(readxl)
+```
+
+# Example 1
+```{r}
+individual = rep(c(1:15), 3)
+therapy = as.factor(rep(c("Therapy A", "Therapy B", "Therapy C"), each = 5))
+timing = as.factor(rep(c("Before", "Middle", "After"), each = 15))
+SBP = c(165, 155, 138, 150, 149, 135, 145, 170, 138, 144, 165, 139, 141, 149, 135,
+        145, 139, 141, 145, 155, 138, 150, 166, 143, 145, 155, 165, 139, 141, 137,
+        140, 133, 130, 145, 149, 125, 142, 160, 130, 142, 133, 140, 141, 140, 133
+)
+patientData = data.frame(individual, timing, therapy, SBP)
+
+patientANOVA = lme(SBP ~ therapy + timing + therapy * timing,
+                   random = ~1+timing|individual, data = patientData)
+anova(patientANOVA)
+
+```
+
+# Example 2
+```{r}
+drugType = rep(c("drug1", "drug2", "drug3"), each = 4)
+painLevel = c(78,70,75,71,66,56,55,60,47,58,48,40)
+painData = data.frame(drugType, painLevel)
+
+kruskal.test(painLevel ~ drugType, data = painData)
+pairwise.wilcox.test(painLevel, drugType, p.adj = "none")
+```
+

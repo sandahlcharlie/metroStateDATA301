@@ -11,3 +11,96 @@ library(nlme)
 library(multcomp)
 ```
 
+# Question 1
+```{r}
+subject = rep(1:8, 3)
+treatment = as.factor(rep(c("Control", "DrugA", "DrugB"), each = 8))
+score = c(5,4,5,6,7,3,4,5,
+          9,9,10,11,12,10,8,9,
+          6,4,7,9,10,3,5,4)
+
+drugData = data.frame(subject, treatment, score)
+
+drugANOVA = lme(score ~ treatment, random = ~1|subject, data = drugData)
+anova(drugANOVA)
+
+drugPostHoc = glht(drugANOVA, linfct = mcp(treatment = "Tukey"))
+summary(drugPostHoc)
+```
+
+# Question 2
+```{r}
+subject = rep(1:8, 3)
+stimulus = as.factor(rep(c("Picture", "PlasticToy", "RubberToy"), each = 8))
+score = c(7,5,3,8,2,4,3,4,
+          12,8,10,12,7,4,16,9,
+          14,13,12,14,12,10,8,13)
+
+snakeData = data.frame(subject, stimulus, score)
+
+snakeANOVA = lme(score ~ stimulus, random = ~1 | subject, data = snakeData)
+anova(snakeANOVA)
+
+snakePostHoc = glht(snakeANOVA, linfct = mcp(stimulus = "Tukey"))
+summary(snakePostHoc)
+```
+
+# Question 3
+```{r}
+ID = rep(1:8, each = 12)
+drug = as.factor(rep(c("AX23","BWW9","Control"), each = 32))
+time = as.factor(rep(rep(c("5min","10min","15min","20min"), each = 8), 3))
+heartRate = c(
+  82, 78, 81, 82, 86, 84, 82, 89,
+  86, 83, 82, 83, 79, 83, 73, 85,
+  81, 88, 81, 83, 77, 84, 78, 76,
+  77, 81, 75, 89, 86, 77, 70, 80,
+  85, 82, 71, 83, 86, 86, 79, 83,
+  66, 86, 78, 88, 85, 82, 83, 84,
+  83, 80, 70, 79, 76, 83, 80, 78,
+  80, 64, 75, 81, 76, 80, 81, 81,
+  69, 66, 84, 80, 72, 65, 75, 71,
+  73, 62, 90, 81, 72, 62, 69, 70,
+  72, 67, 88, 77, 69, 65, 69, 65,
+  74, 73, 87, 72, 70, 61, 68, 65)
+drugTimeData = data.frame(ID, drug, time, score)
+
+drugTimeANOVA = lme(heartRate ~ time + drug + drug * time,
+                    random = ~1|ID, data = drugTimeData)
+anova(drugTimeANOVA)
+
+drugPostHoc = glht(drugTimeANOVA, linfct = mcp(drug = "Tukey"))
+summary(drugPostHoc)
+```
+
+# Question 3
+```{r}
+altimeter = as.factor(rep(c(1:5), 8))
+temperature = as.factor(rep(c("Low temperature", "High temperature"), each = 20))
+position = as.factor(rep(rep(c("High", "Low", "Left", "Right"), each = 5), 2))
+accuracy = c(84, 69, 99, 70, 91,
+             45, 28, 40, 35, 18,
+             47, 12, 35, 29, 19,
+             90, 68, 71, 59, 85,
+             80, 33, 36, 51, 37,
+             49, 43, 22, 20, 44,
+             45, 18, 56, 42, 38,
+             73, 46, 38, 50, 39)
+altimeterData = data.frame(altimeter, temperature, position, accuracy)
+
+altimeterANOVA = lme(accuracy ~ temperature + position + temperature * position,
+                     random = ~1|altimeter, data = altimeterData)
+anova(altimeterANOVA)
+
+positions <- c("High", "Low", "Left", "Right")
+for (pos in positions) {
+  lowTemp <- altimeterData$accuracy[altimeterData$position == pos
+                                    & altimeterData$temperature == 
+                                       "Low temperature"]
+  highTemp <- altimeterData$accuracy[altimeterData$position == pos
+                                     & altimeterData$temperature == 
+                                        "High temperature"]
+  print(pos)
+  print(t.test(lowTemp, highTemp, paired = TRUE))
+}
+```

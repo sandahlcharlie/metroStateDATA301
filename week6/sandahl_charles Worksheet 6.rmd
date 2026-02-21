@@ -1,0 +1,39 @@
+---
+title: "Worksheet6"
+author: "Charles Sandahl"
+date: "2026-02-20"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(car)
+library(nlme)
+library(multcomp)
+library(readxl)
+```
+
+# Question 1
+```{r}
+individual = rep(c(1:8), 2)
+pizzaType = as.factor(rep(c("Pop John's", "Dominos"), each = 4))
+timeOfDay = as.factor(rep(c("After Breakfast", "After Dinner"), each = 8))
+mood = c(52, 59, 66, 43, 55, 61, 62, 39,
+         77, 69, 68, 71, 82, 69, 80, 59)
+pizzaData = data.frame(individual, pizzaType, timeOfDay, mood)
+
+pizzaANOVA = lme(mood ~ timing + pizzaType + timing * pizzaType,
+                 random = ~1+timing|individual, data = pizzaData)
+anova(pizzaANOVA)
+```
+
+# Question 2
+```{r}
+exercise = rep(c("No Exercise", "20 Min Exercise", "60 Min Exercise"), each = 5)
+score = c(23,26,32,37,29,22,27,39,35,46,59,66,38,49,56)
+exerciseData = data.frame(exercise, score)
+
+kruskal.test(score ~ exercise, data = exerciseData)
+pairwise.wilcox.test(score, exercise, p.adj = "none")
+```
+

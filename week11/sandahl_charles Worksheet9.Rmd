@@ -1,0 +1,47 @@
+---
+title: "Worksheet9"
+author: "Charles Sandahl"
+date: "2026-03-27"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(readxl)
+library(plotly)
+library(GGally)
+library(factoextra)
+```
+
+# Question 1
+```{r}
+USairPollution = read_excel("~/DATA301-01 Variance and Multivariate Analysis/Week 11 - Principal Component Analysis/USairpollution.xlsx")
+```
+
+```{r}
+ggpairs(data= USairPollution, columns = c("Temp", "Wind", "Precipitation"))
+```
+
+# Question 2
+```{r}
+salmonData = read_excel("~/DATA301-01 Variance and Multivariate Analysis/Week 11 - Principal Component Analysis/SalmonData.xlsx")
+salmonModel = prcomp(~Winter+Spring+Fall, data = salmonData, scale=TRUE)
+salmonResult = summary(salmonModel)
+salmonResult$importance
+salmonResult$rotation
+get_eig(salmonModel)
+biplot(salmonModel)
+```
+
+# Question 3
+```{r}
+irisModel = prcomp(~Sepal.Length+Sepal.Width+Petal.Length+Petal.Width,
+                   data = iris,
+                   scale = TRUE)
+irisResult = summary(irisModel)
+irisResult$importance
+irisResult$rotation
+get_eig(irisModel)
+biplot(irisModel)
+```
+

@@ -1,0 +1,58 @@
+---
+title: "Examples Week 11"
+author: "Charles Sandahl"
+date: "2026-03-27"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(readxl)
+library(plotly)
+library(GGally)
+library(factoextra)
+```
+
+```{r}
+chestWaistHips <- read_excel("~/DATA301-01 Variance and Multivariate Analysis/Week 11 - Principal Component Analysis/chest_waist_hips.xlsx")
+plot_ly(data = chestWaistHips, x=~Chest, y=~Waist, z=~Hips)
+```
+
+```{r}
+ggpairs(data = chestWaistHips, columns = c("Chest", "Waist", "Hips"))
+```
+
+# PCA
+```{r}
+chestWaistHipsModel = prcomp(~Chest+Waist+Hips, data=chestWaistHips, scale=TRUE)
+chestWaistHipsResult = summary(chestWaistHipsModel)
+#standard deviation of 3 scaled vectors
+chestWaistHipsResult$sdev
+#mean of 3 variables
+chestWaistHipsResult$center
+#shows how much variation is explained, how many PCs to keep?
+chestWaistHipsResult$importance
+# keep 1 because it explains 69% of variation
+screeplot(chestWaistHipsModel, type="lines")
+# keep any with eigen greater than > 1
+get_eig(chestWaistHipsModel)
+# take the PC1 numbers for a model using linear combination
+# 0.62x_1+0.6x_2+0.51x_1
+# where x_1 = chest, x_2 = Waist, x_3 = hips
+chestWaistHipsResult$rotation
+biplot(chestWaistHipsModel)
+# these are the x-scores for using each PC model
+chestWaistHipsResult$x
+```
+
+```{r}
+educationIntelligenceData = read_excel("~/DATA301-01 Variance and Multivariate Analysis/Week 11 - Principal Component Analysis/Education and intelligence data.xlsx")
+educationIntelligenceModel = prcomp(~.-educationlevel,
+                                    data = educationIntelligenceData,
+                                    scale = TRUE)
+educationIntelligenceResults = summary(educationIntelligenceModel)
+educationIntelligenceResults$importance
+educationIntelligenceResults$rotation
+biplot(educationIntelligenceModel)
+```
+

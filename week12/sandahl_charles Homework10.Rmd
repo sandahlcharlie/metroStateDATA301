@@ -1,0 +1,12 @@
+---
+title: "Homework10"
+author: "Charles Sandahl"
+date: "2026-04-03"
+output: html_document
+---
+
+```{r}
+library(MASS)
+library(ggplot2)
+```
+

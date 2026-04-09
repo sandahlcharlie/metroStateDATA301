@@ -1,0 +1,68 @@
+---
+title: "Homework9"
+author: "Charles Sandahl"
+date: "2026-03-27"
+output: html_document
+---
+
+```{r}
+library(readxl)
+library(plotly)
+library(GGally)
+library(factoextra)
+```
+
+```{r}
+carData = read_excel("~/DATA301-01 Variance and Multivariate Analysis/Week 11 - Principal Component Analysis/Car data.xlsx")
+head(carData)
+testData = read_excel("~/DATA301-01 Variance and Multivariate Analysis/Week 11 - Principal Component Analysis/personal test scores.xlsx")
+head(testData)
+bondData = read_excel("~/DATA301-01 Variance and Multivariate Analysis/Week 11 - Principal Component Analysis/premium and discount bond.xlsx")
+head(bondData)
+heptathlonData = read_excel("~/DATA301-01 Variance and Multivariate Analysis/Week 11 - Principal Component Analysis/Heptathlon.xlsx")
+head(heptathlonData)
+```
+
+# Question 1
+```{r}
+carModel = prcomp(~.-Model-Make-Size, data = carData, scale = TRUE)
+carResults = summary(carModel)
+carResults$importance
+carResults$rotation
+get_eig(carModel)
+biplot(carModel)
+```
+
+
+# Question 2
+```{r}
+testModel = prcomp(~.-Participant, data = testData, scale=TRUE)
+testResults = summary(testModel)
+testResults$importance
+testResults$rotation
+get_eig(testModel)
+biplot(testModel)
+```
+
+
+# Question 3
+```{r}
+bondModel = prcomp(~.-Date, data = bondData, scale=TRUE)
+bondResults = summary(bondModel)
+bondResults$importance
+bondResults$rotation
+get_eig(bondModel)
+biplot(bondModel)
+```
+
+
+# Question 4
+```{r}
+heptathlonModel = prcomp(~.-Name, data = heptathlonData, scale = TRUE)
+heptathlonResults = summary(heptathlonModel)
+heptathlonResults$importance
+heptathlonResults$rotation
+get_eig(heptathlonModel)
+biplot(heptathlonModel)
+```
+

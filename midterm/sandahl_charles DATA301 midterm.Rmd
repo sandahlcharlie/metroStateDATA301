@@ -1,0 +1,114 @@
+---
+title: "Midterm"
+author: "Charles Sandahl"
+date: "2026-02-27"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(car)
+library(readxl)
+library(nlme)
+library(multcomp)
+```
+
+# Question 1
+```{r}
+midterm = c(56,99,88,83,75,88,90,84)
+final = c(62,92,79,76,81,82,85,86)
+
+t.test(midterm, final, paired = TRUE, 
+       alternative = "greater")
+```
+
+# Question 2
+```{r}
+bloodPressure <- read_excel("midterm/BloodPressure.xlsx")
+t.test(BPReduction ~ Group, data=bloodPressure)
+```
+
+# Question 3
+```{r}
+temperature = factor(rep(c("Low", "High"), each = 9))
+material = factor(rep(rep(c("A", "B", "C"), each = 3), times = 2))
+lifeHours = c(133,155,74,150,188,126,150,168,160,
+              120,110,78,25,70,45,104,92,100)
+batteryDF = data.frame(temperature, material, lifeHours)
+
+batteryModel=aov(lifeHours~temperature+material+temperature*material, data=)
+summary(batteryModel)
+
+lowDF = batteryDF%>%
+  filter(temperature == "Low")
+highDF = batteryDF%>%
+  filter(temperature == "High")
+lowModel=aov(lifeHours~material, data = lowDF)
+highModel=aov(lifeHours~material, data = highDF)
+summary(lowModel)
+summary(highModel)
+```
+
+# Question 4
+```{r}
+nematodesAMT = factor(rep(c("Small", "Medium", "Large"), each = 3))
+seedGrowth = c(10,9,13,5.4,6,7,5.8,5,3) 
+seedDF = data.frame(nematodesAMT, seedGrowth)
+
+growthModel = aov(seedGrowth~nematodesAMT, data = seedDF)
+summary(growthModel)
+TukeyHSD(growthModel)
+
+```
+
+# Question 5
+```{r}
+patientID = rep(c(1:5), 2)
+diet = as.factor(rep(c("A", "B"), each = 10))
+drug = as.factor(rep(rep(c("X", "Y"), each = 5),2))
+sbp = c(120,123,122,104,115,
+        100,105,107,97,99,
+        109,122,135,132,116,
+        93,118,119,107,98)
+drugDF = data.frame(patientID, diet, drug, sbp)
+
+drugModel = lme(sbp~drug+diet+drug*diet, random = ~1|patientID, data = drugDF)
+anova(drugModel)
+```
+
+# Question 6
+```{r}
+id = rep(c('A','B','C','D','E'), 3)
+therapy = as.factor(rep(c("Before", "Middle", "End"), each = 5))
+pain = c(165,155,138,150,135,
+         145,139,141,145,138,
+         140,130,135,140,125)
+painDF = data.frame(id, therapy, pain)
+painModel = lme(pain~therapy, random = ~1|id, data = painDF)
+anova(painModel)
+painPostHoc = glht(painModel, linfct= mcp(therapy="Tukey"))
+summary(painPostHoc)
+```
+
+# Question 7
+```{r}
+botanyData <- read_excel("midterm/BotanyData.xlsx")
+
+botanyModel = lm(Height ~ Irrigation+Weed+Irrigation*Weed, data = botanyData)
+Anova(botanyModel, type = "II")
+```
+
+# Question 8
+```{r}
+PatientID = rep(c(1:6), 2)
+Therapy = as.factor(rep(c("A", "B"), each = 3))
+Site = as.factor(rep(c(1, 2), each = 6))
+Pain = c(55,62,71,31,35,33,
+         58,57,60,29,36,37)
+PainDF = data.frame(PatientID, Therapy, Site, Pain)
+
+PainModel = lme(Pain ~ Site + Therapy + Site * Therapy,
+                 random = ~1+Site|PatientID, data = PainDF)
+anova(PainModel)
+```
+

@@ -1,0 +1,57 @@
+---
+title: "Week 10 LDA"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(MASS)
+#iris data
+model1<-lda(Species~Sepal.Length+Sepal.Width+Petal.Length+Petal.Width, data=iris,prior=c(1/3,1/3,1/3))
+model1$scaling
+model1$counts
+model1$means
+model1$svd
+newpoint<-data.frame(Sepal.Length=5,Sepal.Width=2,Petal.Length=1.2,Petal.Width=0.7)
+predict(object=model1,newdata=newpoint)
+library(ggplot2)
+result1<-predict(model1)
+newdf<-data.frame(group=iris$Species,transcore=result1$x)
+ggplot(data=newdf, aes(x=transcore.LD1, y=transcore.LD2))+geom_point(aes(color=group))
+```
+
+```{r}
+library(MASS)
+library(ggplot2)
+model2<-lda(kiln~., data=Pottery_data, prior=c(1/5,1/5,1/5,1/5,1/5))
+model2$scaling
+model2$svd
+newpoint2<-data.frame(Al203=18.2,Fe203=1.9, Mg0=0.7, Ca0=0.01, Na20=0.3,K20=1.9, Ti20=0.97, Mn0=0.001, Ba0=0.02)
+predict(object=model2,newdata=newpoint2)
+result2<-predict(model2)
+Pottery_data$kiln=as.character(Pottery_data$kiln)
+newdf2<-data.frame(kiln=Pottery_data$kiln, values=result2$x)
+ggplot(data=newdf2,aes(x=values.LD1,y=values.LD2))+geom_point(aes(color=kiln))
+
+```
+
+```{r}
+#activity Wine data
+library(MASS)
+library(ggplot2)
+library(rattle)
+model3<-lda(Type~., data=wine, prior=c(1/3,1/3,1/3))
+model3$scaling
+model3$svd
+newpoint3<-data.frame(Alcohol=11, Malic=3, Ash=2.3, Alcalinity=21.5,Magnesium=99, Phenols=2.8, Flavanoids=2.98, Nonflavanoids=0.12, Proanthocyanins=1.87, Color=2.8, Hue=0.9, Dilution=3.3, Proline=520)
+predict(object=model3,newdata=newpoint3)
+result3<-predict(model3)
+newdf3<-data.frame(type=wine$Type, values=result3$x)
+ggplot(data=newdf3,aes(x=values.LD1, y=values.LD2))+geom_point(aes(color=type))
+model3$call
+
+```
+

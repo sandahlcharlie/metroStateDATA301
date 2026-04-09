@@ -1,0 +1,33 @@
+---
+title: "Worksheet10"
+author: "Charles Sandahl"
+date: "2026-04-03"
+output: html_document
+---
+
+```{r}
+library(MASS)
+library(ggplot2)
+library(readxl)
+```
+
+# Data
+```{r}
+wineData = read_excel("~/DATA301-01 Variance and Multivariate Analysis/Week 12 - Linear Discriminant Analysis/wine.xlsx")
+```
+
+# Question1
+```{r}
+wineData$Type = as.factor(wineData$Type)
+wineModel = lda(Type~.-Type, data = wineData, prior = c(1/3,1/3,1/3))
+wineModel$svd
+29.95777^2/(29.95777^2+18.22846^2)
+18.22846^2/(18.22846^2+29.95777^2)
+newWine = data.frame(Alcohol=11, Malic=3, Ash=2.3, Alcalinity=21.5,Magnesium=99, Phenols=2.8, Flavanoids=2.98, Nonflavanoids=0.12, Proanthocyanins=1.87, Color=2.8, Hue=0.9, Dilution=3.3, Proline=520)
+predict(object = wineModel, newdata = newWine)
+wineResult = predict(wineModel)
+winePlotData = data.frame(group = wineData$Type, transcore = wineResult$x)
+ggplot(data = winePlotData, aes(x=transcore.LD1, y=transcore.LD2,))+
+  geom_point(aes(color=group))
+```
+

@@ -1,0 +1,34 @@
+---
+title: "Examples Week12"
+author: "Charles Sandahl"
+date: "2026-04-03"
+output: html_document
+---
+
+```{r}
+library(MASS)
+library(ggplot2)
+```
+
+
+```{r}
+irisModel = lda(Species~Sepal.Length+Sepal.Width+Petal.Length+Petal.Width,
+                   data = iris,
+                   prior=c(1/3,1/3,1/3))
+irisModel$means
+# for the linear combo (will not use probably)
+irisModel$scaling
+# singular value decomposition, which shows proportion of separation from each
+# linear discriminent. First one is LD1, second is LD 2
+irisModel$svd
+# % of seperation along LD1
+48.64^2/(48.64^2+4.58^2)
+# % of seperation along LD1
+4.58^2/(4.58^2+48.64^2)
+
+# predict the group for a new individual
+newFlower = data.frame(Sepal.Length=6,Sepal.Width=3,Petal.Length=5,Petal.Width=2)
+predict(object = irisModel, newdata = newFlower)
+
+```
+
